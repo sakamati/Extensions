@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Bug to changeset mapper</title>
+    <style>
+        #grid-container {
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+        .config-section{
+            margin: 10px;
+        }
+    </style>
+    <script src="sdk/scripts/VSS.SDK.min.js"></script>
+    <script type="text/javascript">
+            VSS.init({                        
+                explicitNotifyLoaded: true,
+                usePlatformScripts: true,
+                usePlatformStyles: true
+            });
+        
+            VSS.require(["VSS/Service", "TFS/WorkItemTracking/RestClient", "VSS/Controls", "VSS/Controls/Grids"], 
+            function (VSS_Service, TFS_Wit_WebApi, Controls, Grids) 
+            {
+                // Get the REST client
+                var witClient = VSS_Service.getCollectionClient(TFS_Wit_WebApi.WorkItemTrackingHttpClient);
+                var dataSource = [];
+                var changesetPattern = new RegExp("vstfs:///VersionControl/Changeset/([0-9]*)","i");
+                
+                var gridOptions = {
+                    height: "100%",
+                    width: "100%",
+                    source: dataSource,
+                    columns: [
+                        // text is the column header text. 
+                        // index is the key into the source object to find the data for this column
+                        // width is the width of the column, in pixels
+                        { text: "Bug ID", index: "key", width: 150 },
+                        { text: "Changeset", index: "value", width: 300 }
+                    ]
+                };
+
+                var grid = Controls.create(Grids.Grid, $("#grid-container"), gridOptions);
+
+                $("#refreshResult").click(function() {
+                    // getWorkItems(ids, fields, asOf, expand)
+                    var commaSeparatedBugIds = $("#bugIds").val();
+                    witClient.getWorkItems([commaSeparatedBugIds], undefined, undefined, "All").then(
+                        function(workitems) {
+                            dataSource = [];
+                            workitems.forEach(function(workitem, index) {
+                                var changesetNumber = "";
+
+                                for(var j=0; workitem.relations && j<workitem.relations.length; j++)
+                                {
+                                    var relation = workitem.relations[j];
+                                    if(!relation.url) continue;
+                                    var changesetMatches = changesetPattern.exec(relation.url);
+                                    if(changesetMatches && changesetMatches.length > 1)
+                                    {
+                                        changesetNumber = (changesetNumber == "" ? "" : (changesetNumber + ", ")) + changesetMatches[1];
+                                    }                                 
+                                }
+                                dataSource.push({key: workitem.id, value: changesetNumber});
+                            });
+                            grid.setDataSource(dataSource);
+                        });                        
+                    });                        
+                VSS.notifyLoadSucceeded();
+            });              
+        </script>
+</head>
+
+<body>
+    <div class="hub-view explorer work-items-view new-work-items-view triage-view">
+        <div class="hub-content">
+            <div class="hub-splitter splitter horizontal right">
+                <div class="leftPane">
+                    <section class="config-section">
+                        <fieldset>
+                            <div>Bug IDs (comma separated)</div> <br/>
+                            <input type="text" id="bugIds" name="bugIds" />
+                            <br/>
+                            <button id="refreshResult" name="refreshResult" title="Refresh Result">Refresh Result</button>
+                        </fieldset>
+                    </section>
+                </div>
+                <div class="handleBar">
+                </div>
+                <div class="rightPane">
+                    <div class="hub-title">Bugs with changeset</div>
+                    <div id="grid-container" class="right-hub-content"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

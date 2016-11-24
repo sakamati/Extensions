@@ -1,0 +1,48 @@
+    {
+        "manifestVersion": 1,
+        "id": "BugChangesetMapper",
+        "type": "ms.vss-web.hub",
+        "version": "1.0.4",
+        "name": "Bug to changeset mapper",
+        "description": "Bug to changeset mapper",
+        "publisher": "sampathkumar",
+        "targets": [
+            {
+                "id": "Microsoft.VisualStudio.Services"
+            }
+        ],
+        "contributions": [
+            {
+                "id": "sampathkumar.BugChangesetMapper",
+                "type": "ms.vss-web.hub",
+                "description": "Gets changeset associated to Bug",
+                "targets": [
+                    "ms.vss-work-web.work-hub-group"
+                ],
+                "properties": {
+                    "name": "Bug to changeset mapper",
+                    "order": 99,
+                    "uri": "Home.html"
+                }
+            }
+        ],
+        "files": [
+            {
+                "path": "Home.html",
+                "addressable": true
+            },
+            {
+                "path": "sdk/scripts",
+                "addressable": true
+            },
+            {
+                "path": "img",
+                "addressable": true
+            }
+        ],
+        "scopes": [
+            "vso.work",
+            "vso.code",
+            "vso.work_write"
+        ]
+    }
