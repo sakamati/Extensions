@@ -21,12 +21,55 @@
             usePlatformStyles: true
         });
 
-        VSS.require(["VSS/Service", "TFS/WorkItemTracking/RestClient", "VSS/Controls", "VSS/Controls/Grids"],
-        function (VSS_Service, TFS_Wit_WebApi, Controls, Grids) {
+        VSS.require(["VSS/Service", "TFS/WorkItemTracking/RestClient", "VSS/Controls", "VSS/Controls/TreeView", "VSS/Controls/Grids"],
+        function (VSS_Service, TFS_Wit_WebApi, Controls, TreeView, Grids) {
             // Get the REST client
             var witClient = VSS_Service.getCollectionClient(TFS_Wit_WebApi.WorkItemTrackingHttpClient);
+            var projectId = VSS.getWebContext().project.id;
             var dataSource = [];
             var changesetPattern = new RegExp("vstfs:///VersionControl/Changeset/([0-9]*)", "i");
+
+
+            // Converts the source to TreeNodes
+            function convertToTreeNodes(items) {
+                return $.map(items, function (item) {
+                    var node = new TreeView.TreeNode(item.name);
+                    node.icon = item.icon;
+                    node.expanded = item.expanded;
+                    if (item.children && item.children.length > 0) {
+                        node.addRange(convertToTreeNodes(item.children));
+                    }
+                    return node;
+                });
+            }
+
+            witClient.getQueries(projectId, "All", 2, false).then(
+                function (queries) {
+
+                    var treeViewOptions = {
+                        width: 400,
+                        height: "100%",
+                        nodes: convertToTreeNodes(queries)
+                    };
+                    // Create the treeView in a container element
+                    var treeview = Controls.create(TreeView.TreeView, $("#treeview-container"), treeViewOptions);
+
+                },
+                function (reject) {
+                    console.log(reject);
+                    console.log("reject.status" + reject.status);
+                    console.log("reject.message" + reject.message);
+                });
+
+            var container = $("#treeview-container");
+
+            // Attach selectionchanged event using a DOM element containing treeview
+            container.bind("selectionchanged", function (e, args) {
+                var selectedNode = args.selectedNode;
+                if (selectedNode) {
+                    alert('${selectedNode.text} selected!');
+                }
+            });
 
             var gridOptions = {
                 height: "100%",
@@ -36,8 +79,13 @@
                     // text is the column header text.
                     // index is the key into the source object to find the data for this column
                     // width is the width of the column, in pixels
-                    { text: "Bug ID", index: "key", width: 150 },
-                    { text: "Changeset", index: "value", width: 300 }
+                    { text: "S.No", index: "sno", width: 50 },
+                    { text: "ID", index: "key", width: 100 },
+                    { text: "Title", index: "title", width: 300 },
+                    { text: "Severity", index: "severity", width: 100 },
+                    { text: "Created By", index: "createdBy", width: 200 },
+                    { text: "Area Path", index: "areaPath", width: 300 },
+                    { text: "Changeset", index: "changeset", width: 200 }
                 ]
             };
 
@@ -60,7 +108,15 @@
                                     changesetNumber = (changesetNumber == "" ? "" : (changesetNumber + ", ")) + changesetMatches[1];
                                 }
                             }
-                            dataSource.push({ key: workitem.id, value: changesetNumber })
+                            dataSource.push({
+                                sno: index + 1,
+                                key: workitem.id,
+                                title: workitem.fields["System.Title"],
+                                severity: workitem.fields["Microsoft.VSTS.Common.Severity"],
+                                createdBy: workitem.fields["System.CreatedBy"],
+                                areaPath: workitem.fields["System.AreaPath"],
+                                changeset: changesetNumber
+                            })
                         });
                         grid.setDataSource(dataSource);
                     }, function (reject) {
@@ -82,10 +138,11 @@
                     <section class="config-section">
                         <fieldset>
                             <div>Bug IDs (comma separated)</div> <br />
-                            <input type="text" id="bugIds" name="bugIds" />
+                            <textarea rows="4" cols="30" id="bugIds" name="bugIds"></textarea>
                             <br />
                             <button id="refreshResult" name="refreshResult" title="Refresh Result">Refresh Result</button>
                         </fieldset>
+                        <div id="treeview-container"></div>
                     </section>
                 </div>
                 <div class="handleBar">
