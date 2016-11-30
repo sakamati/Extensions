@@ -49,12 +49,12 @@ function (VSS_Service, TFS_Wit_WebApi, Controls, TreeView, Grids) {
         if (selectedNode) {
             witClient.queryById(selectedNode.link.substr(1, selectedNode.link.length - 1))
                 .then(function (result) {
-                    console.log(result);
                     refreshGrid(Controls, Grids, witClient, result.columns, result.workItems);
+                    hideProgressIndicator();
                 }, function (reject) {
                     handleCommunicationError(reject);
+                    hideProgressIndicator();
                 });
-            alert(selectedNode.link);
             //alert('${selectedNode.text} selected!');
         }
     });
@@ -83,6 +83,7 @@ function refreshGrid(Controls, Grids, witClient, columns, workItems) {
 
 function buildWorkItemGrid(Controls, Grids, witClient, witIdArray, columns) {
     var changesetPattern = new RegExp("vstfs:///VersionControl/Changeset/([0-9]*)", "i");
+    showProgressIndicator();
     witClient.getWorkItems(witIdArray, undefined, undefined, "All").then(
             function (workitems) {
                 var gridColumns = [], dataSource = [];
@@ -113,7 +114,7 @@ function buildWorkItemGrid(Controls, Grids, witClient, witIdArray, columns) {
                             changesetNumber = (changesetNumber == "" ? "" : (changesetNumber + ", ")) + changesetMatches[1];
                         }
                     }
-                    var dataItem = {};                    
+                    var dataItem = {};
                     gridColumns.forEach(function (gridColumn) {
                         dataItem[gridColumn.index] = workitem.fields[gridColumn.index];
                     });
@@ -128,17 +129,36 @@ function buildWorkItemGrid(Controls, Grids, witClient, witIdArray, columns) {
                     source: dataSource,
                     columns: gridColumns
                 };
-                
+
                 var grid = Controls.create(Grids.Grid, $("#grid-container"), gridOptions);
+                hideProgressIndicator();
             }, function (reject) {
                 handleCommunicationError(reject);
+                hideProgressIndicator();
             });
 }
 
 function handleCommunicationError(reason) {
+    //var message = reason;
+    //if (reason.message) {
+    //    message = reason.message;
+    //}
+    //var errorElement = $("#error");
+    //errorElement.text(message);
+    //errorElement.css("display", "block");
     console.log(reason);
 }
 
 function clearWorkItemGrid() {
     $("#grid-container").empty();
+}
+
+function showProgressIndicator() {
+    //$("#status-indicator").show();
+    $("#progressIndicator").css("visibility", "visible");
+}
+
+function hideProgressIndicator() {
+    //$("#status-indicator").hide();
+    $("#progressIndicator").css("visibility", "hidden");
 }

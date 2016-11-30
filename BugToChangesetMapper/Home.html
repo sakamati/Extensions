@@ -7,10 +7,21 @@
         #grid-container {
             margin-left: 20px;
             margin-right: 20px;
+            margin-top: 10px;
         }
 
         .config-section {
             margin: 10px;
+        }
+
+        .error {
+            background-color: #ffc;
+            border: 1px solid #e6e6e6;
+        }
+
+        .bottom-separator {
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ccc;
         }
     </style>
     <script src="sdk/scripts/VSS.SDK.min.js"></script>
@@ -23,7 +34,7 @@
             <div class="hub-splitter splitter horizontal right">
                 <div class="leftPane">
                     <section class="config-section">
-                        <fieldset>
+                        <fieldset class="bottom-separator">
                             <div>Bug IDs (comma separated)</div> <br />
                             <textarea rows="4" cols="30" id="bugIds" name="bugIds"></textarea>
                             <br />
@@ -35,12 +46,21 @@
                 <div class="handleBar">
                 </div>
                 <div class="rightPane">
-                    <div class="hub-title">Bugs with changeset</div>
+                    <div class="hub-title">
+                        <div class="query-result-grid-info">
+                            <div id="status-indicator" class="status-indicator inline" style="display: none;">
+                                <div class="status status-inline" aria-busy="true"></div>
+                                <span class="status-progress"></span>
+                            </div>
+                            <span id="page-title">Bugs with changeset</span>
+                            <span class="error" id="error" style="display:none;"></span>
+                            <div class="hub-progress pageProgressIndicator" id="progressIndicator" style="visibility: hidden;"></div>
+                        </div>
+                    </div>
                     <div id="grid-container" class="right-hub-content"></div>
                 </div>
             </div>
         </div>
     </div>
 </body>
-
 </html>
