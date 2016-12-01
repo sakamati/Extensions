@@ -74,7 +74,7 @@ function refreshGrid(Controls, Grids, witClient, columns, workItems) {
         commaSeparatedBugIds += workitem.id + ",";
     });
 
-    if (commaSeparatedBugIds.endsWith(",")) {
+    if (commaSeparatedBugIds.lastIndexOf(",") == commaSeparatedBugIds.length - 1) {
         commaSeparatedBugIds = commaSeparatedBugIds.slice(0, commaSeparatedBugIds.length - 1);
     }
 
