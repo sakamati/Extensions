@@ -94,6 +94,53 @@ var ExcellentExport = (function() {
         return data;
     };
 
+    var loadXMLDoc = function (filename) {
+        if (window.ActiveXObject) {
+            var xhttp = new ActiveXObject("Msxml2.XMLHTTP");
+        } else {
+            var xhttp = new XMLHttpRequest();
+        }
+        xhttp.open("GET", filename, false);
+        xhttp.send("");
+        return xhttp.responseXML;
+    }
+
+    var ExportToExcel = function () {
+        var inner = document.getElementById('grid-container');
+        //var xml1 = document.createElement('div');
+        //xml1.innerHTML = inner.innerHTML;
+        var parser = new DOMParser();
+        var xmlString = (new XMLSerializer()).serializeToString(inner);
+        xmlString = xmlString.replace('xmlns="http://www.w3.org/1999/xhtml"', '');
+        var xml = parser.parseFromString(xmlString, "text/xml");
+
+        var xsl = loadXMLDoc("TestReal.xslt");
+        if (window.ActiveXObject || "ActiveXObject" in window) {
+            //var xslt = new ActiveXObject("Msxml2.XSLTemplate");
+
+            //ex = xml.transformNode(xsl);
+            //document.getElementById("container").innerHTML = ex;
+            var xslt = new ActiveXObject("Msxml2.XSLTemplate");
+            var xslDoc = new ActiveXObject("Msxml2.FreeThreadedDOMDocument");
+
+            xslDoc.load(xsl);
+
+            //console.log(xslt.styleSheet);
+            xslt.stylesheet = xslDoc;
+            var xslProc = xslt.createProcessor();
+            xslProc.input = xml;
+            xslProc.transform();
+            document.getElementById("container").innerHTML = xslProc.output;
+        }
+            // code for Chrome, Firefox, Opera, etc.
+        else if (document.implementation && document.implementation.createDocument) {
+            var xsltProcessor = new XSLTProcessor();
+            xsltProcessor.importStylesheet(xsl);
+            var resultDocument = xsltProcessor.transformToFragment(xml, document);
+            document.getElementById('container').appendChild(resultDocument);
+        }
+    }
+
     function createDownloadLink(anchor, base64data, exporttype, filename) {
         var blob;
         if (window.navigator.msSaveBlob) {
@@ -117,6 +164,7 @@ var ExcellentExport = (function() {
     var ee = {
         /** @export */
         excel: function (anchor, table, name) {
+            ExportToExcel();
             table = get(table);
             var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML};
             var b64 = base64(format(template.excel, ctx));           
