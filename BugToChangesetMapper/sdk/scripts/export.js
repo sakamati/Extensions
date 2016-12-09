@@ -114,7 +114,7 @@ var ExcellentExport = (function() {
         xmlString = xmlString.replace('xmlns="http://www.w3.org/1999/xhtml"', '');
         var xml = parser.parseFromString(xmlString, "text/xml");
 
-        var xsl = loadXMLDoc("TestReal.xslt");
+        var xsl = loadXMLDoc("Excel.xslt");
         if (window.ActiveXObject || "ActiveXObject" in window) {
             //var xslt = new ActiveXObject("Msxml2.XSLTemplate");
 
