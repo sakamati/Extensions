@@ -55,9 +55,9 @@
                             <span class="error" id="error" style="display:none;"></span>
                             <div class="hub-progress pageProgressIndicator" id="progressIndicator" style="visibility: hidden;"></div>
                         </div><div>
-                            <a download="export.xls"
+                            <a download="somedata.xls"
                                href="#"
-                               onclick="return ExportToExcel();">
+                               onclick="return ExcellentExport.excel(this, 'testTable', 'Sheet Name Here');">
                                 Export table to Excel
                             </a>
                         </div>
@@ -70,53 +70,4 @@
     <div id="container" style="display:none">
     </div>
 </body>
-
-<script>
-    function ExportToExcel() {
-        inner = document.getElementById('grid-container');
-        var xml1 = document.createElement('div');
-        xml1.innerHTML = inner.innerHTML;
-        parser = new DOMParser();
-        xmlString = (new XMLSerializer()).serializeToString(inner);
-        xmlString = xmlString.replace('xmlns="http://www.w3.org/1999/xhtml"', '');
-        xml = parser.parseFromString(xmlString, "text/xml");
-
-        xsl = loadXMLDoc("Excel.xslt");
-        if (window.ActiveXObject || "ActiveXObject" in window) {
-            //var xslt = new ActiveXObject("Msxml2.XSLTemplate");
-
-            //ex = xml.transformNode(xsl);
-            //document.getElementById("container").innerHTML = ex;
-            var xslt = new ActiveXObject("Msxml2.XSLTemplate");
-            var xslDoc = new ActiveXObject("Msxml2.FreeThreadedDOMDocument");
-
-            xslDoc.load(xsl);
-
-            //console.log(xslt.styleSheet);
-            xslt.stylesheet = xslDoc;
-            var xslProc = xslt.createProcessor();
-            xslProc.input = xml;
-            xslProc.transform();
-            document.getElementById("container").innerHTML = xslProc.output;
-        }
-            // code for Chrome, Firefox, Opera, etc.
-        else if (document.implementation && document.implementation.createDocument) {
-            xsltProcessor = new XSLTProcessor();
-            xsltProcessor.importStylesheet(xsl);
-            resultDocument = xsltProcessor.transformToFragment(xml, document);
-            document.getElementById('container').appendChild(resultDocument);
-        }
-        return ExcellentExport.excel(this, 'testTable', 'Sheet Name Here');
-    }
-    function loadXMLDoc(filename) {
-        if (window.ActiveXObject) {
-            xhttp = new ActiveXObject("Msxml2.XMLHTTP");
-        } else {
-            xhttp = new XMLHttpRequest();
-        }
-        xhttp.open("GET", filename, false);
-        xhttp.send("");
-        return xhttp.responseXML;
-    }
-</script>
 </html>
