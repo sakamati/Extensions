@@ -28,9 +28,6 @@
     <script type="text/javascript" src="sdk/scripts/export.js"></script>
 </head>
 <body>
-    <div>
-        <a download="somedata.xls" href="#" onclick="return ExcellentExport.excel(this, 'grid-container', 'Sheet Name Here');">Export table to Excel</a>
-    </div>
     <div class="hub-view explorer work-items-view new-work-items-view triage-view">
         <div class="hub-content">
             <div class="hub-splitter splitter horizontal right">
@@ -60,7 +57,7 @@
                         </div><div>
                             <a download="export.xls"
                                href="#"
-                               onclick="return ExcellentExport.excel(this, 'testTable', 'Sheet Name Here');">
+                               onclick="return ExportToExcel();">
                                 Export table to Excel
                             </a>
                         </div>
@@ -73,9 +70,44 @@
     <div id="container" style="display:none">
     </div>
 </body>
-</html>
 
 <script>
+    function ExportToExcel() {
+        inner = document.getElementById('grid-container');
+        var xml1 = document.createElement('div');
+        xml1.innerHTML = inner.innerHTML;
+        parser = new DOMParser();
+        xmlString = (new XMLSerializer()).serializeToString(inner);
+        xmlString = xmlString.replace('xmlns="http://www.w3.org/1999/xhtml"', '');
+        xml = parser.parseFromString(xmlString, "text/xml");
+
+        xsl = loadXMLDoc("Excel.xslt");
+        if (window.ActiveXObject || "ActiveXObject" in window) {
+            //var xslt = new ActiveXObject("Msxml2.XSLTemplate");
+
+            //ex = xml.transformNode(xsl);
+            //document.getElementById("container").innerHTML = ex;
+            var xslt = new ActiveXObject("Msxml2.XSLTemplate");
+            var xslDoc = new ActiveXObject("Msxml2.FreeThreadedDOMDocument");
+
+            xslDoc.load(xsl);
+
+            //console.log(xslt.styleSheet);
+            xslt.stylesheet = xslDoc;
+            var xslProc = xslt.createProcessor();
+            xslProc.input = xml;
+            xslProc.transform();
+            document.getElementById("container").innerHTML = xslProc.output;
+        }
+            // code for Chrome, Firefox, Opera, etc.
+        else if (document.implementation && document.implementation.createDocument) {
+            xsltProcessor = new XSLTProcessor();
+            xsltProcessor.importStylesheet(xsl);
+            resultDocument = xsltProcessor.transformToFragment(xml, document);
+            document.getElementById('container').appendChild(resultDocument);
+        }
+        return ExcellentExport.excel(this, 'testTable', 'Sheet Name Here');
+    }
     function loadXMLDoc(filename) {
         if (window.ActiveXObject) {
             xhttp = new ActiveXObject("Msxml2.XMLHTTP");
@@ -86,39 +118,5 @@
         xhttp.send("");
         return xhttp.responseXML;
     }
-
-
-    inner = document.getElementById('grid-container');
-    var xml1 = document.createElement('div');
-    xml1.innerHTML = inner.innerHTML;
-    parser = new DOMParser();
-    xmlString = (new XMLSerializer()).serializeToString(inner);
-    xmlString = xmlString.replace('xmlns="http://www.w3.org/1999/xhtml"', '');
-    xml = parser.parseFromString(xmlString, "text/xml");
-
-    xsl = loadXMLDoc("Excel.xslt");
-    if (window.ActiveXObject || "ActiveXObject" in window) {
-        //var xslt = new ActiveXObject("Msxml2.XSLTemplate");
-
-        //ex = xml.transformNode(xsl);
-        //document.getElementById("container").innerHTML = ex;
-        var xslt = new ActiveXObject("Msxml2.XSLTemplate");
-        var xslDoc = new ActiveXObject("Msxml2.FreeThreadedDOMDocument");
-
-        xslDoc.load(xsl);
-
-        //console.log(xslt.styleSheet);
-        xslt.stylesheet = xslDoc;
-        var xslProc = xslt.createProcessor();
-        xslProc.input = xml;
-        xslProc.transform();
-        document.getElementById("container").innerHTML = xslProc.output;
-    }
-        // code for Chrome, Firefox, Opera, etc.
-    else if (document.implementation && document.implementation.createDocument) {
-        xsltProcessor = new XSLTProcessor();
-        xsltProcessor.importStylesheet(xsl);
-        resultDocument = xsltProcessor.transformToFragment(xml, document);
-        document.getElementById('container').appendChild(resultDocument);
-    }
 </script>
+</html>
