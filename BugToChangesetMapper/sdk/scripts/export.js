@@ -107,8 +107,7 @@ var ExcellentExport = (function() {
 
     var ExportToExcel = function () {
         var inner = document.getElementById('grid-container');
-        //var xml1 = document.createElement('div');
-        //xml1.innerHTML = inner.innerHTML;
+        inner.innerHTML = '';
         var parser = new DOMParser();
         var xmlString = (new XMLSerializer()).serializeToString(inner);
         xmlString = xmlString.replace('xmlns="http://www.w3.org/1999/xhtml"', '');

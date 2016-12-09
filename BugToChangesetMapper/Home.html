@@ -38,7 +38,8 @@
                             <textarea rows="4" cols="30" id="bugIds" name="bugIds"></textarea>
                             <br />
                             <button id="refreshResult" name="refreshResult" title="Refresh Result">Refresh Result</button>
-                        </fieldset>
+                            <a download="somedata.xls" href="#" onclick="return ExcellentExport.excel(this, 'testTable', 'Sheet Name Here');">Export results to Excel</a>
+                        </fieldset>                        
                         <div id="treeview-container"></div>
                     </section>
                 </div>
@@ -54,12 +55,6 @@
                             <span id="page-title">Bugs with changeset</span>
                             <span class="error" id="error" style="display:none;"></span>
                             <div class="hub-progress pageProgressIndicator" id="progressIndicator" style="visibility: hidden;"></div>
-                        </div><div>
-                            <a download="somedata.xls"
-                               href="#"
-                               onclick="return ExcellentExport.excel(this, 'testTable', 'Sheet Name Here');">
-                                Export table to Excel
-                            </a>
                         </div>
                     </div>
                     <div id="grid-container" class="right-hub-content"></div>
