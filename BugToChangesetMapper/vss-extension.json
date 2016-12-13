@@ -2,7 +2,7 @@
         "manifestVersion": 1,
         "id": "BugChangesetMapper",
         "type": "ms.vss-web.hub",
-        "version": "1.0.8",
+        "version": "1.0.15",
         "name": "Bug to changeset mapper",
         "description": "Bug to changeset mapper",
         "publisher": "sampathkumar",
@@ -29,6 +29,10 @@
         "files": [
             {
                 "path": "Home.html",
+                "addressable": true
+            },
+            {
+                "path": "Excel.xslt",
                 "addressable": true
             },
             {
