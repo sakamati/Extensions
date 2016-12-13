@@ -139,14 +139,14 @@ function buildWorkItemGrid(Controls, Grids, witClient, witIdArray, columns) {
 }
 
 function handleCommunicationError(reason) {
-    //var message = reason;
-    //if (reason.message) {
-    //    message = reason.message;
-    //}
+    var message = reason;
+    if (reason.message) {
+        message = reason.message;
+    }
     //var errorElement = $("#error");
     //errorElement.text(message);
     //errorElement.css("display", "block");
-    console.log(reason);
+    alert(message);
 }
 
 function clearWorkItemGrid() {
