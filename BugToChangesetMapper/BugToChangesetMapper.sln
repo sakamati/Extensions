@@ -8,20 +8,20 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "BugToChangesetMapper", "htt
 		UseIISExpress = "true"
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_13460"
-		Debug.AspNetCompiler.PhysicalPath = "..\..\BugToChangesetMapper\"
+		Debug.AspNetCompiler.PhysicalPath = "..\BugToChangesetMapper\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_13460\"
 		Debug.AspNetCompiler.Updateable = "true"
 		Debug.AspNetCompiler.ForceOverwrite = "true"
 		Debug.AspNetCompiler.FixedNames = "false"
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.VirtualPath = "/localhost_13460"
-		Release.AspNetCompiler.PhysicalPath = "..\..\BugToChangesetMapper\"
+		Release.AspNetCompiler.PhysicalPath = "..\BugToChangesetMapper\"
 		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_13460\"
 		Release.AspNetCompiler.Updateable = "true"
 		Release.AspNetCompiler.ForceOverwrite = "true"
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
-		SlnRelativePath = "..\..\BugToChangesetMapper\"
+		SlnRelativePath = "..\BugToChangesetMapper\"
 	EndProjectSection
 EndProject
 Global
