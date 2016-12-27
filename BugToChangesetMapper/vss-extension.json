@@ -1,50 +1,57 @@
-    {
-        "manifestVersion": 1,
-        "id": "BugChangesetMapper",
-        "type": "ms.vss-web.hub",
-        "version": "1.0.16",
-        "name": "Bug to changeset mapper",
-        "description": "Bug to changeset mapper",
-        "publisher": "sampathkumar",
-        "targets": [
-            {
-                "id": "Microsoft.VisualStudio.Services"
+{
+    "manifestVersion": 1,
+    "id": "BugChangesetMapper",
+    "type": "ms.vss-web.hub",
+    "version": "1.0.17",
+    "name": "Bug to changeset mapper",
+    "description": "Bug to changeset mapper",
+    "publisher": "sampathkumar",
+    "galleryFlags": [
+        "Public",
+        "Preview"
+    ],
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],
+    "icons": {
+        "default": "img/logo.png"
+    },
+    "contributions": [
+        {
+            "id": "sampathkumar.BugChangesetMapper",
+            "type": "ms.vss-web.hub",
+            "description": "Gets changeset associated to Bug",
+            "targets": [
+                "ms.vss-work-web.work-hub-group"
+            ],
+            "properties": {
+                "name": "Bug to changeset mapper",
+                "order": 99,
+                "uri": "Home.html"
             }
-        ],
-        "contributions": [
-            {
-                "id": "sampathkumar.BugChangesetMapper",
-                "type": "ms.vss-web.hub",
-                "description": "Gets changeset associated to Bug",
-                "targets": [
-                    "ms.vss-work-web.work-hub-group"
-                ],
-                "properties": {
-                    "name": "Bug to changeset mapper",
-                    "order": 99,
-                    "uri": "Home.html"
-                }
-            }
-        ],
-        "files": [
-            {
-                "path": "Home.html",
-                "addressable": true
-            },
-            {
-                "path": "Excel.xslt",
-                "addressable": true
-            },
-            {
-                "path": "sdk/scripts",
-                "addressable": true
-            },
-            {
-                "path": "img",
-                "addressable": true
-            }
-        ],
-        "scopes": [
-            "vso.work"
-        ]
-    }
+        }
+    ],
+    "files": [
+        {
+            "path": "Home.html",
+            "addressable": true
+        },
+        {
+            "path": "Excel.xslt",
+            "addressable": true
+        },
+        {
+            "path": "sdk/scripts",
+            "addressable": true
+        },
+        {
+            "path": "img",
+            "addressable": true
+        }
+    ],
+    "scopes": [
+        "vso.work"
+    ]
+}
