@@ -1,9 +1,9 @@
 {
     "manifestVersion": 1,
-    "id": "BugChangesetMapper",
+    "id": "BugChangesetMapperDev",
     "type": "ms.vss-web.hub",
     "version": "1.0.19",
-    "name": "Bug to changeset mapper",
+    "name": "Bug to changeset mapper.dev",
     "description": "Bug to changeset mapper",
     "publisher": "sampathkumar",
     "galleryFlags": [
